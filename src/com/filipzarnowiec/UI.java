@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+//https://www.tutorialspoint.com/swing/swing_jpanel.htm
+
 public class UI {
 
     private JFrame mainFrame;
