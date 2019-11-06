@@ -96,6 +96,7 @@ public class View {
                 @Override
                 public void run() {
                     try{
+             ///TODO: check in for loop or better way to validate presence of mouse
                         System.out.println("I'm going to sleep");
                         Thread.sleep(3000);
                         if(focusTarget != null && focusTarget.equals(e.getSource())){
@@ -104,7 +105,6 @@ public class View {
                     }catch (InterruptedException event){
                         ///"we dont care about this"
                     }
-
                 }
             };
 
@@ -121,7 +121,7 @@ public class View {
         }
     }
 
-    public static Cursor getTransparentCursor(){
+    public static Cursor prepareCurdoer(){
         // Transparent 16 x 16 pixel cursor image.
         BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 
