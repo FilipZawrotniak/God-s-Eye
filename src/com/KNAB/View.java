@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 public class View extends JFrame{
     protected MouseHandler mouseHandler;
@@ -30,8 +31,6 @@ public class View extends JFrame{
 
     public View() {
         this.mouseHandler = new MouseHandler();
-//        this.presenter = presenter;
-
         setFrame();
         this.add(mainPanel);
         prepareTimeAndDate();
@@ -42,8 +41,8 @@ public class View extends JFrame{
     private void setFrame() {
         this.setTitle("God's Eye");
         this.setIconImage(new ImageIcon(getClass().getResource("Images/EyeIcon.jpg")).getImage());
-
         this.setSize(800, 600);
+//        this.getContentPane().setCursor(getTransparentCursor());
 //        this.setExtendedState(Frame.MAXIMIZED_BOTH);
 //        this.setUndecorated(true);
         this.setLocationRelativeTo(null);
@@ -63,6 +62,18 @@ public class View extends JFrame{
             ((JButton) tempButton).addActionListener(mouseHandler.getActionListener());
         }
     }
+
+    public static Cursor getTransparentCursor() {
+        BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+
+        Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0),
+                "blank cursor");
+
+        return blankCursor;
+
+    }
+
+
 
 
     protected class MouseHandler {
