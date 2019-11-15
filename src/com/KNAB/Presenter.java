@@ -9,6 +9,7 @@ import java.util.Map;
 public class Presenter {
     private View view;
     private Model model;
+
     private static Map<String, JPanel> scenes; ///TODO make it final !
 
     public Presenter(View view, Model model) {
