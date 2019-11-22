@@ -1,4 +1,4 @@
-package com.KNAB.Images;
+package com.KNAB;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,8 +21,10 @@ public class MyButton extends JButton {
         g2.fillRoundRect(0, 0, loadingStatus, getHeight(), 30, 0);
 
         g2.setPaint(Color.BLACK);
-        g2.setFont(Font.getFont("Monaco"));
-        g2.drawString(getText(), getWidth()/2 - 20, getHeight()/2);
+        ///TODO: text need to be showed in the center of button
+        int shift = (getText().length() - 4)*4;
+        FontMetrics metrics = g2.getFontMetrics(this.getFont());
+        g2.drawString(getText(), (getWidth() - metrics.stringWidth(getText()))/2, (getHeight() - metrics.getHeight())/2 + metrics.getAscent());
 
         g2.dispose();
     }

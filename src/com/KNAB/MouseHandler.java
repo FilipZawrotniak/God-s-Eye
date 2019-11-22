@@ -1,7 +1,5 @@
 package com.KNAB;
 
-import com.KNAB.Images.MyButton;
-
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -10,6 +8,7 @@ public class MouseHandler {
     private MouseAdapter mouseAdapter;
     private ActionListener actionListener;
     private Thread buttonSelect = null;
+    private int loadingTime = 18;
 
     MouseHandler() {
 
@@ -24,7 +23,7 @@ public class MouseHandler {
                                 Thread.sleep(100);
                                 for(int i = 0; i <= 100; i++){
                                     ((MyButton) e.getComponent()).setLoadingStatus(i);
-                                    Thread.sleep(25);
+                                    Thread.sleep(loadingTime);
                                     if(this.isInterrupted()){
                                         ((MyButton) e.getComponent()).resetLoadingStatus();
                                         this.interrupt();
@@ -67,5 +66,9 @@ public class MouseHandler {
     ActionListener getActionListener(){
         return actionListener;
     }
+
+    int getLoadingTime(){ return loadingTime; }
+
+    void setLoadingTime(int loadingTime){ this.loadingTime = loadingTime; }
 }
 
