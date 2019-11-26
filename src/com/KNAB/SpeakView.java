@@ -49,6 +49,7 @@ public class SpeakView extends JPanel {
 
     private JPanel prepareFunctionPanel(){
         JPanel tempPanel = new JPanel();
+        tempPanel.setPreferredSize(new Dimension(((int)(view.getWidth()*0.2)),view.getHeight()));
         tempPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         GridLayout layout = new GridLayout(0 ,1);
         layout.setHgap(20);
@@ -96,14 +97,22 @@ public class SpeakView extends JPanel {
         JPanel tempPanel = new JPanel(layout);
         returnPanel.add(tempPanel);
 
+        Font font = new Font(Font.SERIF, Font.BOLD, 15);
+
         JLabel titleLabel = new JLabel("God's Eye:");
         titleLabel.setBackground(Color.GRAY.darker());
+        titleLabel.setFont(font);
         tempPanel.add(titleLabel);
         JLabel titleLabel2 = new JLabel("Speak");
+        titleLabel2.setFont(font);
         titleLabel2.setBackground(Color.GRAY.darker());
         tempPanel.add(titleLabel2);
 
         valueLabel = new JLabel("");
+        font = new Font(Font.MONOSPACED, Font.ITALIC, 50);
+        valueLabel.setFont(font);
+        valueLabel.setBackground(Color.LIGHT_GRAY);
+        valueLabel.setOpaque(true);
         topPanel.add(valueLabel);
 
         return topPanel;
@@ -118,7 +127,10 @@ public class SpeakView extends JPanel {
 
         int i = 0;
         for(String tempButtonName : alphabetDictionary.keySet()){
+            Font font = new Font(Font.DIALOG, Font.PLAIN, 20);
+
             MyButton tempButton = new MyButton(tempButtonName);
+            tempButton.setFont(font);
             tempButton.setPosition(i);
             tempButton.addActionListener(new ActionListener() {
                 @Override
@@ -177,8 +189,10 @@ public class SpeakView extends JPanel {
     }
 
     private MyButton getCharacterButton(String name){
+        Font font = new Font(Font.DIALOG, Font.PLAIN, 20);
         MyButton tempButton = new MyButton(name);
-//        tempButton.addActionListener(mouseHandler.getUpdateSpeakLabelListener());
+        tempButton.setFont(font);
+
         tempButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

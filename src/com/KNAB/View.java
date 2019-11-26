@@ -17,7 +17,6 @@ public class View extends JFrame{
         setFrame();
         this.getContentPane().add(this.prepareHomePanel());
         scenes = new HashMap<>(prepareScenes());
-//        this.getContentPane().add(new SpeakView(this));
         this.setVisible(true);
     }
 
