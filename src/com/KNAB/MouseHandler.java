@@ -6,9 +6,10 @@ import java.awt.event.MouseEvent;
 
 public class MouseHandler {
     private MouseAdapter mouseAdapter;
-    private ActionListener actionListener;
-    private Thread buttonSelect = null;
-    private int loadingTime = 18;
+    private ActionListener executeCommandListener;
+    private ActionListener updateSpeakLabelListener;
+    private static Thread buttonSelect = null;
+    private int loadingTime = 15;
 
     MouseHandler() {
 
@@ -20,19 +21,16 @@ public class MouseHandler {
                     public void run() {
                         try{
                             if(e.getComponent().isEnabled()){
-                                Thread.sleep(100);
+                                Thread.sleep(200);
                                 for(int i = 0; i <= 100; i++){
                                     ((MyButton) e.getComponent()).setLoadingStatus(i);
                                     Thread.sleep(loadingTime);
-                                    if(this.isInterrupted()){
-                                        ((MyButton) e.getComponent()).resetLoadingStatus();
-                                        this.interrupt();
-                                    }
+                                }
+                                ((MyButton) e.getComponent()).resetLoadingStatus();
+                                if(e.getComponent().isValid()){
+                                    ((MyButton)e.getComponent()).doClick();
                                 }
                             }
-                            ((MyButton)e.getComponent()).doClick();
-                            ((MyButton) e.getComponent()).resetLoadingStatus();
-
                         }catch (InterruptedException ignored){
                             ((MyButton) e.getComponent()).resetLoadingStatus();
                         }
@@ -53,9 +51,14 @@ public class MouseHandler {
             }
         };
 
-        this.actionListener = e -> {
+        this.executeCommandListener = e -> {
+            buttonSelect.interrupt();
             System.out.println(e.getActionCommand()); ///TODO: DEBUG
-            //Presenter.setScene(e.getActionCommand());
+            Presenter.executeCommand(e.getActionCommand());///TODO: fixBug - button is clicked two times !
+        };
+
+        this.updateSpeakLabelListener = e -> {
+            Presenter.updateSpeakLabel(e.getActionCommand());
         };
     }
 
@@ -63,9 +66,11 @@ public class MouseHandler {
         return mouseAdapter;
     }
 
-    ActionListener getActionListener(){
-        return actionListener;
+    ActionListener getExecuteCommandListener(){
+        return executeCommandListener;
     }
+
+    ActionListener getUpdateSpeakLabelListener() { return updateSpeakLabelListener; }
 
     int getLoadingTime(){ return loadingTime; }
 

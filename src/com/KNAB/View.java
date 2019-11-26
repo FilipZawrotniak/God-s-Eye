@@ -5,27 +5,29 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+///TODO: clean code up
 public class View extends JFrame{
     MouseHandler mouseHandler = new MouseHandler();
-//    final static public Map<String, JPanel> scenes;
+    final public Map<String, JPanel> scenes;
+    private JPanel home;
     private JPanel timeAndDatePanel;
     private JPanel buttonPanel;
 
     public View() {
         setFrame();
-//        scenes = new HashMap<>(this.getScenes());
-        addComponentsToPane(this.getContentPane());
+        this.getContentPane().add(this.prepareHomePanel());
+        scenes = new HashMap<>(prepareScenes());
+//        this.getContentPane().add(new SpeakView(this));
         this.setVisible(true);
     }
 
-    public JPanel setScene(JPanel newPanel){
-        if(newPanel != null){
+    public JPanel setScene(String key){
+        if(scenes.containsKey(key)){
             this.getContentPane().removeAll();
-            this.addComponentsToPane(this.getContentPane());
-            this.invalidate();
-            this.validate();
-            return newPanel;
+            this.getContentPane().add(scenes.get(key));
+            this.revalidate();
+            this.repaint();
+            return scenes.get(key);
         }
         return null;
     }
@@ -37,21 +39,25 @@ public class View extends JFrame{
 //        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 //        this.setSize(screenSize);
 //        this.getContentPane().setCursor(getTransparentCursor());
-//        this.setUndecorated(true);
+        this.setUndecorated(true);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-//    private HashMap<String, JPanel> getScenes(){
-//        Map<String, JPanel> tempHashMap = new HashMap<>();
-//        tempHashMap.put("Speak", new ExitScene());
-//
-//        return tempHashMap;
-//    }
+    private HashMap<String, JPanel> prepareScenes(){
+        HashMap<String, JPanel> tempHashMap = new HashMap<>();
+        tempHashMap.put("Speak", new SpeakView(this));
+        tempHashMap.put("Home", this.home);
 
-    private void addComponentsToPane(Container pane){
-        pane.add(prepareTimeAndDatePanel(), BorderLayout.PAGE_START);
-        pane.add(prepareButtonPanel(), BorderLayout.CENTER);
+        return tempHashMap;
+    }
+
+    private JPanel prepareHomePanel(){
+        this.home = new JPanel();
+        this.home.add(prepareTimeAndDatePanel(), BorderLayout.PAGE_START);
+        this.home.add(prepareButtonPanel(), BorderLayout.CENTER);
+
+        return this.home;
     }
 
     private JPanel prepareTimeAndDatePanel(){
@@ -68,7 +74,7 @@ public class View extends JFrame{
 
     private JPanel prepareButtonPanel(){
         buttonPanel = new JPanel();
-        buttonPanel.setPreferredSize(new Dimension(this.getWidth(), (int)(this.getHeight()*0.9)));
+        buttonPanel.setPreferredSize(new Dimension(this.getWidth(), (int)(this.getHeight()*0.89)));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         GridLayout layout = new GridLayout(3, 3);
         layout.setHgap(20);
@@ -117,9 +123,15 @@ public class View extends JFrame{
         for (int i = 0; i < buttonTitles.length; i++) {
             MyButton tempButton = new MyButton(buttonTitles[i]);
             tempButton.setFont(font);
-            tempButton.addMouseListener(mouseHandler.getMouseAdapter());
-            tempButton.addActionListener(mouseHandler.getActionListener());
+            if(!(tempButton.getText().equals("Speak") || tempButton.getText().equals("Exit"))){
+                tempButton.setEnabled(false);
+            }
+            tempButton.addActionListener(mouseHandler.getExecuteCommandListener());
             panel.add(tempButton);
         }
+    }
+
+    public void setMyLayout(JPanel panel){
+
     }
 }
