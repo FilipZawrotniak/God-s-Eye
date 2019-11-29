@@ -54,7 +54,7 @@ public class MouseHandler {
         this.executeCommandListener = e -> {
             buttonSelect.interrupt();
             System.out.println(e.getActionCommand()); ///TODO: DEBUG
-            Presenter.executeCommand(e.getActionCommand());///TODO: fixBug - button is clicked two times !
+            Presenter.executeCommand(e.getActionCommand());
         };
 
         this.updateSpeakLabelListener = e -> {
@@ -69,11 +69,5 @@ public class MouseHandler {
     ActionListener getExecuteCommandListener(){
         return executeCommandListener;
     }
-
-    ActionListener getUpdateSpeakLabelListener() { return updateSpeakLabelListener; }
-
-    int getLoadingTime(){ return loadingTime; }
-
-    void setLoadingTime(int loadingTime){ this.loadingTime = loadingTime; }
 }
 

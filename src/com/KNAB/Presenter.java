@@ -60,7 +60,7 @@ public class Presenter {
 
     public static void updateSpeakLabel(String letter){
         try{
-            SpeakView.updateLabel(letter);
+                SpeakView.updateLabel(letter);
         }catch (Exception e){
             e.printStackTrace();
             System.out.println("Presenter -> JLabel not found !");

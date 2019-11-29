@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 ///TODO: clean code up
 public class View extends JFrame{
-    MouseHandler mouseHandler = new MouseHandler();
+//    MouseHandler mouseHandler = new MouseHandler();
     final public Map<String, JPanel> scenes;
     private JPanel home;
     private JPanel timeAndDatePanel;
@@ -125,12 +125,8 @@ public class View extends JFrame{
             if(!(tempButton.getText().equals("Speak") || tempButton.getText().equals("Exit"))){
                 tempButton.setEnabled(false);
             }
-            tempButton.addActionListener(mouseHandler.getExecuteCommandListener());
+            tempButton.addActionListener(tempButton.getMouseHandler().getExecuteCommandListener());
             panel.add(tempButton);
         }
-    }
-
-    public void setMyLayout(JPanel panel){
-
     }
 }

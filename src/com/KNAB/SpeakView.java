@@ -2,9 +2,6 @@ package com.KNAB;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
 import java.util.*;
 
 ///TODO: clean code up
@@ -16,58 +13,52 @@ public class SpeakView extends JPanel {
     private JPanel functionPanel;
     private JPanel topPanel;
     private static JLabel valueLabel;
-    private MouseHandler mouseHandler;
 
-    public SpeakView(View view){
-
+    SpeakView(View view){
         this.view = view;
-        this.abcPanel = prepareAbcPanel();
-        this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         BorderLayout layout = new BorderLayout();
         this.setLayout(layout);
 
-        this.add(this.abcPanel, BorderLayout.CENTER);
-        this.add(this.functionPanel = prepareFunctionPanel(), BorderLayout.EAST);
-        this.add(this.topPanel = prepareTopPanel(), BorderLayout.PAGE_START);
-
-        this.mouseHandler = new MouseHandler();
+        this.add(prepareAbcPanel(), BorderLayout.CENTER);
+        this.add(prepareFunctionPanel(), BorderLayout.EAST);
+        this.add(prepareTopPanel(), BorderLayout.PAGE_START);
     }
 
     private JPanel prepareAbcPanel(){
-        JPanel tempPanel = new JPanel();
-        tempPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-        tempPanel.setBackground(Color.GRAY.darker());
+        abcPanel = new JPanel();
+        abcPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        abcPanel.setBackground(Color.GRAY.darker());
         GridLayout layout = new GridLayout(3 ,3);
         layout.setHgap(20);
         layout.setVgap(20);
-        tempPanel.setLayout(layout);
+        abcPanel.setLayout(layout);
 
-        this.fillAbcPanel(tempPanel);
+        this.fillAbcPanel(abcPanel);
 
-        return tempPanel;
+        return abcPanel;
     }
 
     private JPanel prepareFunctionPanel(){
-        JPanel tempPanel = new JPanel();
-        tempPanel.setPreferredSize(new Dimension(((int)(view.getWidth()*0.2)),view.getHeight()));
-        tempPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        functionPanel = new JPanel();
+        functionPanel.setPreferredSize(new Dimension(((int)(view.getWidth()*0.2)),view.getHeight()));
+        functionPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         GridLayout layout = new GridLayout(0 ,1);
         layout.setHgap(20);
         layout.setVgap(20);
-        tempPanel.setLayout(layout);
+        functionPanel.setLayout(layout);
 
         String[] buttonsNames= {"Clear", "Frequent/saved phrases", "Speak!"};
 
         for(String s : buttonsNames){
             MyButton tempButton = new MyButton(s);
-            if(s == "Frequent/saved phrases"){
+            if(s.equals("Frequent/saved phrases")){
                 tempButton.setEnabled(false);
             }
             tempButton.addActionListener(tempButton.getMouseHandler().getExecuteCommandListener());
-            tempPanel.add(tempButton);
+            functionPanel.add(tempButton);
         }
 
-        return tempPanel;
+        return functionPanel;
     }
 
     private JPanel prepareTopPanel(){
@@ -120,9 +111,12 @@ public class SpeakView extends JPanel {
 
     private void fillAbcPanel(JPanel panel){
         LinkedHashMap<String, Character[]> alphabetDictionary = new LinkedHashMap<>(getAlphabetDic());
+        System.out.println(this);
 
         if(panel != null){
             panel.removeAll();
+        }else {
+            return;
         }
 
         int i = 0;
@@ -132,18 +126,16 @@ public class SpeakView extends JPanel {
             MyButton tempButton = new MyButton(tempButtonName);
             tempButton.setFont(font);
             tempButton.setPosition(i);
-            tempButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    int position = tempButton.getPosition();
-                    panel.removeAll();
-                    setCharacterButtons(position, alphabetDictionary.get(tempButtonName), panel);
-                    view.revalidate();
-                    view.repaint();
-                }
+            tempButton.addActionListener(e -> {
+                int position = tempButton.getPosition();
+                panel.removeAll();
+                setCharacterButtons(position, alphabetDictionary.get(tempButtonName), panel);
+                view.revalidate();
+                view.repaint();
             });
             panel.add(tempButton);
             i++;
+
         }
         panel.revalidate();
         panel.repaint();
@@ -154,6 +146,10 @@ public class SpeakView extends JPanel {
         int j = 0;
         ///TODO: place it in the way that letters show up in clock order
         for(int i = 0; i < 9; i++){
+            if(position == i){
+                panel.add(this.getCharacterButton(""));
+                continue;
+            }
             if(position - 3 == i){
                 panel.add(this.getCharacterButton(characters[j++].toString()));
                 continue;
@@ -170,13 +166,17 @@ public class SpeakView extends JPanel {
                 panel.add(this.getCharacterButton(characters[j++].toString()));
                 continue;
             }
+            if (position == 7 && i == 3){
+                panel.add(this.getCharacterButton(characters[j++].toString()));
+                continue;
+            }
             panel.add(new JPanel());
         }
     }
 
     private static Map<String, Character[]> getAlphabetDic(){
         Map<String, Character[]> tempMap= new LinkedHashMap<>();
-        String[] headers = {"AB", "CDE", "FG", "HIJ", "KLMN", "OPR", "ST", "UWX", "YZ"};
+        String[] headers = {"AB", "CDE", "FG", "HIJ", "KLMN", "OPQ", "RS", "TUWV", "XYZ"};
 
         for(String s : headers){
             Character[] characters = new Character[s.length()];
@@ -193,26 +193,23 @@ public class SpeakView extends JPanel {
         MyButton tempButton = new MyButton(name);
         tempButton.setFont(font);
 
-        tempButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Presenter.updateSpeakLabel(actionEvent.getActionCommand());
-                fillAbcPanel(abcPanel);
-            }
+        tempButton.addActionListener(e -> {
+            Presenter.updateSpeakLabel(e.getActionCommand());
+            fillAbcPanel(abcPanel);
         });
 
         return tempButton;
     }
 
-    public static void updateLabel(String letter){
+    static void updateLabel(String letter){
         valueLabel.setText(valueLabel.getText() + letter);
     }
 
-    public static void clearLabel(){
+    static void clearLabel(){
         valueLabel.setText("");
     }
 
-    public static String getValueLabel(){
+    static String getValueLabel(){
         return valueLabel.getText();
     }
 }
